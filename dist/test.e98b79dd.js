@@ -117,79 +117,77 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"C:/Users/shijia.tang/AppData/Local/Yarn/Data/global/node_modules/parcel/src/builtins/bundle-url.js":[function(require,module,exports) {
-var bundleURL = null;
-
-function getBundleURLCached() {
-  if (!bundleURL) {
-    bundleURL = getBundleURL();
-  }
-
-  return bundleURL;
-}
-
-function getBundleURL() {
-  // Attempt to find the URL of the current script and use that as the base URL
-  try {
-    throw new Error();
-  } catch (err) {
-    var matches = ('' + err.stack).match(/(https?|file|ftp|chrome-extension|moz-extension):\/\/[^)\n]+/g);
-
-    if (matches) {
-      return getBaseURL(matches[0]);
-    }
-  }
-
-  return '/';
-}
-
-function getBaseURL(url) {
-  return ('' + url).replace(/^((?:https?|file|ftp|chrome-extension|moz-extension):\/\/.+)\/[^/]+$/, '$1') + '/';
-}
-
-exports.getBundleURL = getBundleURLCached;
-exports.getBaseURL = getBaseURL;
-},{}],"C:/Users/shijia.tang/AppData/Local/Yarn/Data/global/node_modules/parcel/src/builtins/css-loader.js":[function(require,module,exports) {
-var bundle = require('./bundle-url');
-
-function updateLink(link) {
-  var newLink = link.cloneNode();
-
-  newLink.onload = function () {
-    link.remove();
+})({"test.js":[function(require,module,exports) {
+var createNode = function createNode(value) {
+  return {
+    data: value,
+    previous: null,
+    next: null
   };
+};
 
-  newLink.href = link.href.split('?')[0] + '?' + Date.now();
-  link.parentNode.insertBefore(newLink, link.nextSibling);
-}
+var createList = function createList(value) {
+  return createNode(value);
+};
 
-var cssTimeout = null;
+var appendList = function appendList(list, value) {
+  var node = createNode(value);
+  var x = list;
 
-function reloadCSS() {
-  if (cssTimeout) {
-    return;
+  while (x.next) {
+    x = x.next;
   }
 
-  cssTimeout = setTimeout(function () {
-    var links = document.querySelectorAll('link[rel="stylesheet"]');
+  x.next = node;
+  node.previous = x;
+  return node;
+};
 
-    for (var i = 0; i < links.length; i++) {
-      if (bundle.getBaseURL(links[i].href) === bundle.getBundleURL()) {
-        updateLink(links[i]);
-      }
-    }
+var removeFromList = function removeFromList(list, node) {
+  // debugger;
+  var workList = list;
+  var preNode = null;
 
-    cssTimeout = null;
-  }, 50);
-}
+  while (workList !== node) {
+    preNode = workList;
+    workList = workList.next;
+  } // 上一个节点的next = 和目标List的next
 
-module.exports = reloadCSS;
-},{"./bundle-url":"C:/Users/shijia.tang/AppData/Local/Yarn/Data/global/node_modules/parcel/src/builtins/bundle-url.js"}],"style.css":[function(require,module,exports) {
-var reloadCSS = require('_css_loader');
 
-module.hot.dispose(reloadCSS);
-module.hot.accept(reloadCSS);
-},{"_css_loader":"C:/Users/shijia.tang/AppData/Local/Yarn/Data/global/node_modules/parcel/src/builtins/css-loader.js"}],"C:/Users/shijia.tang/AppData/Local/Yarn/Data/global/node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+  preNode.next = workList.next;
+  workList.next.previous = preNode.previous;
+};
+
+var getNode = function getNode(list, index) {
+  var x = list;
+
+  while (x.data !== index) {
+    x = x.next;
+  }
+
+  return x;
+};
+
+var travelList = function travelList(list, fn) {
+  var workList = list;
+
+  while (workList !== null) {
+    fn(workList);
+    workList = workList.next;
+  }
+};
+
+var list = createList(10);
+var node1 = appendList(list, 20);
+var node2 = appendList(list, 30);
+var node3 = appendList(list, 40);
+removeFromList(list, node2);
+travelList(list, function (node) {
+  console.log(node.data);
+});
+console.log("list");
+console.log(list);
+},{}],"C:/Users/shijia.tang/AppData/Local/Yarn/Data/global/node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -217,7 +215,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52241" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51260" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
@@ -393,5 +391,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["C:/Users/shijia.tang/AppData/Local/Yarn/Data/global/node_modules/parcel/src/builtins/hmr-runtime.js"], null)
-//# sourceMappingURL=/style.e308ff8e.js.map
+},{}]},{},["C:/Users/shijia.tang/AppData/Local/Yarn/Data/global/node_modules/parcel/src/builtins/hmr-runtime.js","test.js"], null)
+//# sourceMappingURL=/test.e98b79dd.js.map

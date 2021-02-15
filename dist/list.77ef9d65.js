@@ -117,79 +117,83 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"C:/Users/shijia.tang/AppData/Local/Yarn/Data/global/node_modules/parcel/src/builtins/bundle-url.js":[function(require,module,exports) {
-var bundleURL = null;
+})({"list.js":[function(require,module,exports) {
+var createList = function createList(value) {
+  return createNode(value);
+};
 
-function getBundleURLCached() {
-  if (!bundleURL) {
-    bundleURL = getBundleURL();
-  }
+var appendList = function appendList(list, value) {
+  var node = createNode(value);
+  var workList = list;
 
-  return bundleURL;
-}
+  while (workList.next) {
+    workList = workList.next;
+  } // 最后一个节点的next = 目标node
 
-function getBundleURL() {
-  // Attempt to find the URL of the current script and use that as the base URL
-  try {
-    throw new Error();
-  } catch (err) {
-    var matches = ('' + err.stack).match(/(https?|file|ftp|chrome-extension|moz-extension):\/\/[^)\n]+/g);
 
-    if (matches) {
-      return getBaseURL(matches[0]);
-    }
-  }
+  workList.next = node;
+  return node;
+};
 
-  return '/';
-}
+var removeFromList = function removeFromList(list, node) {
+  // debugger;
+  var workList = list;
+  var preNode = null;
 
-function getBaseURL(url) {
-  return ('' + url).replace(/^((?:https?|file|ftp|chrome-extension|moz-extension):\/\/.+)\/[^/]+$/, '$1') + '/';
-}
+  while (workList !== node) {
+    preNode = workList;
+    workList = workList.next;
+  } // 上一个节点的next = 和目标List的next
 
-exports.getBundleURL = getBundleURLCached;
-exports.getBaseURL = getBaseURL;
-},{}],"C:/Users/shijia.tang/AppData/Local/Yarn/Data/global/node_modules/parcel/src/builtins/css-loader.js":[function(require,module,exports) {
-var bundle = require('./bundle-url');
 
-function updateLink(link) {
-  var newLink = link.cloneNode();
+  preNode.next = workList.next; // // 如果删除的是第1个节点
+  // if (list === node) {
+  //     list = node.next;
+  // } else {
+  //     // 如果删除的是第二个节点，第1个节点.next=第2个节点.next
+  //     if (list.next === node) {
+  //         list.next = node.next;
+  //     }
+  // }
+};
 
-  newLink.onload = function () {
-    link.remove();
+var createNode = function createNode(value) {
+  return {
+    data: value,
+    next: null
   };
+};
 
-  newLink.href = link.href.split('?')[0] + '?' + Date.now();
-  link.parentNode.insertBefore(newLink, link.nextSibling);
-}
+var travelList = function travelList(list, fn) {
+  var workList = list;
 
-var cssTimeout = null;
+  while (workList !== null) {
+    fn(workList);
+    workList = workList.next;
+  }
+};
 
-function reloadCSS() {
-  if (cssTimeout) {
-    return;
+var getNode = function getNode(list, index) {
+  var x = list;
+
+  while (x.data !== index) {
+    x = x.next;
   }
 
-  cssTimeout = setTimeout(function () {
-    var links = document.querySelectorAll('link[rel="stylesheet"]');
+  return x;
+};
 
-    for (var i = 0; i < links.length; i++) {
-      if (bundle.getBaseURL(links[i].href) === bundle.getBundleURL()) {
-        updateLink(links[i]);
-      }
-    }
+var list = createList(10);
+var node1 = appendList(list, 20);
+var node2 = appendList(list, 30);
+var node3 = appendList(list, 40); // removeFromList(list, node2);
 
-    cssTimeout = null;
-  }, 50);
-}
-
-module.exports = reloadCSS;
-},{"./bundle-url":"C:/Users/shijia.tang/AppData/Local/Yarn/Data/global/node_modules/parcel/src/builtins/bundle-url.js"}],"style.css":[function(require,module,exports) {
-var reloadCSS = require('_css_loader');
-
-module.hot.dispose(reloadCSS);
-module.hot.accept(reloadCSS);
-},{"_css_loader":"C:/Users/shijia.tang/AppData/Local/Yarn/Data/global/node_modules/parcel/src/builtins/css-loader.js"}],"C:/Users/shijia.tang/AppData/Local/Yarn/Data/global/node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+travelList(list, function (node) {
+  console.log(node.data);
+});
+console.log("list");
+console.log(list);
+},{}],"C:/Users/shijia.tang/AppData/Local/Yarn/Data/global/node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -393,5 +397,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["C:/Users/shijia.tang/AppData/Local/Yarn/Data/global/node_modules/parcel/src/builtins/hmr-runtime.js"], null)
-//# sourceMappingURL=/style.e308ff8e.js.map
+},{}]},{},["C:/Users/shijia.tang/AppData/Local/Yarn/Data/global/node_modules/parcel/src/builtins/hmr-runtime.js","list.js"], null)
+//# sourceMappingURL=/list.77ef9d65.js.map
