@@ -49,7 +49,7 @@ const list = createList(10);
 const node1 = appendList(list, 20);
 const node2 = appendList(list, 30);
 const node3 = appendList(list, 40);
-removeFromList(list, node2);
+// removeFromList(list, node2);
 travelList(list, node => {
     console.log(node.data);
 });
