@@ -138,15 +138,23 @@ var appendList = function appendList(list, value) {
 var removeFromList = function removeFromList(list, node) {
   // debugger;
   var workList = list;
-  var preNode = null;
+  var preNode = node; // 之前将 p 初始化为 null，这里改为 node
 
-  while (workList !== node) {
+  while (workList !== node && workList !== null) {
+    // 课堂里忘了对 null 进行处理，如果 node 不在 list 中，x 就可能为 null
     preNode = workList;
     workList = workList.next;
-  } // 上一个节点的next = 和目标List的next
+  }
 
-
-  preNode.next = workList.next; // // 如果删除的是第1个节点
+  if (workList === null) {
+    return false;
+  } else if (workList === preNode) {
+    preNode = workList.next;
+  } else {
+    // 上一个节点的next = 和目标List的next
+    preNode.next = workList.next;
+    return list;
+  } // // 如果删除的是第1个节点
   // if (list === node) {
   //     list = node.next;
   // } else {
@@ -155,6 +163,7 @@ var removeFromList = function removeFromList(list, node) {
   //         list.next = node.next;
   //     }
   // }
+
 };
 
 var createNode = function createNode(value) {
@@ -187,6 +196,8 @@ var list = createList(10);
 var node1 = appendList(list, 20);
 var node2 = appendList(list, 30);
 var node3 = appendList(list, 40); // removeFromList(list, node2);
+
+var newList = removeFromList(list, node2); // 必须用newList获得惭悔之才能拿到删除了第一个节点的新list
 
 travelList(list, function (node) {
   console.log(node.data);
@@ -221,7 +232,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52241" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49717" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -14,13 +14,20 @@ const appendList = (list, value) => {
 const removeFromList = (list, node) => {
     // debugger;
     let workList = list;
-    let preNode = null;
-    while (workList !== node) {
+    let preNode = node; // 之前将 p 初始化为 null，这里改为 node
+    while (workList !== node && workList !== null) {       // 课堂里忘了对 null 进行处理，如果 node 不在 list 中，x 就可能为 null
         preNode = workList;
         workList = workList.next;
     }
+    if (workList === null) {
+        return false;
+    } else if(workList === preNode) {
+        preNode = workList.next;
+    } else {
     // 上一个节点的next = 和目标List的next
-    preNode.next = workList.next;
+        preNode.next = workList.next;
+        return list
+    }
     // // 如果删除的是第1个节点
     // if (list === node) {
     //     list = node.next;
@@ -57,6 +64,7 @@ const node1 = appendList(list, 20);
 const node2 = appendList(list, 30);
 const node3 = appendList(list, 40);
 // removeFromList(list, node2);
+const newList = removeFromList(list, node2);    // 必须用newList获得惭悔之才能拿到删除了第一个节点的新list
 travelList(list, node => {
     console.log(node.data);
 });
